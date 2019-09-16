@@ -74,12 +74,18 @@ public class OglasService {
 	public Response dodajOglas(Oglas o, @Context HttpServletRequest request)
 	{
 		OglasDAO oglasi = (OglasDAO) context.getAttribute("OglasDAO");
+		UserDAO users = (UserDAO) context.getAttribute("UserDAO");
+				
 		if(oglasi.getOglasi().containsKey(o.getNaziv())) {
 			return Response.status(400).build();
 		}
 		
+		User u = users.getUsers().get(o.getProdavac());
+		u.getObjavljeniOglasi().add(o.getNaziv());
+
 		oglasi.getOglasi().put(o.getNaziv(), o);
 		context.setAttribute("OglasDAO", oglasi);
+		context.setAttribute("UserDAO", users);
 		
 		return Response.ok().build();
 		

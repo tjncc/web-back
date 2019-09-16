@@ -55,6 +55,9 @@ public class Oglas implements Comparable<Oglas> {
 		this.brLajkova = 0;
 		this.brDislajkova = 0;
 		this.omiljen = 0;
+		this.opis = "";
+		this.datumIsticanja = null;
+		this.grad = "";		
 		this.recenzije = new ArrayList<Recenzija>();
 		this.stanje = Aktivan.AKTUELAN;
 		
