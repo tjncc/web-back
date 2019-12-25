@@ -21,6 +21,9 @@ public class UserDAO {
 		
 		User admin = new User("admin","admin","Admin","Admin",Uloga.ADMINISTRATOR,"","","");
 		users.put("admin", admin);
+		
+		User seller = new User("seller","seller","Seller","Seller",Uloga.PRODAVAC,"","","");
+		users.put("seller", seller);
 	}
 	
 	public UserDAO(String contextPath) {

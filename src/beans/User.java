@@ -25,6 +25,7 @@ public class User{
 	private ArrayList<Poruka> poruke = new ArrayList<Poruka>();
 	private int brLajkova;
 	private int brDislajkova;
+	private int prijave;
 	
 	
 	public static enum Uloga{
@@ -37,6 +38,7 @@ public class User{
 		this.uloga = Uloga.KUPAC;
 		this.datumRegistracije = java.time.LocalDate.now().toString();
 		this.idOne = "";
+		this.prijave = 0;
 	}
 	
 
@@ -53,6 +55,7 @@ public class User{
 		this.grad = grad;
 		this.email = email;
 		this.datumRegistracije = java.time.LocalDate.now().toString();
+		this.prijave = 0;
 
 	}
 	
@@ -227,6 +230,20 @@ public class User{
 	public void setBrDislajkova(int brDislajkova) {
 		this.brDislajkova = brDislajkova;
 	}
+
+	
+	
+
+	public int getPrijave() {
+		return prijave;
+	}
+
+
+
+	public void setPrijave(int prijave) {
+		this.prijave = prijave;
+	}
+
 
 
 	@Override

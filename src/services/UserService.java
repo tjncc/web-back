@@ -117,6 +117,25 @@ public class UserService {
 		return Response.ok(user).build();	
 	}
 	
+	
+	@POST
+	@Path("/sellerinfo/{naziv}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getSellerData(@PathParam("naziv") String naziv,  @Context HttpServletRequest request) {
+		
+		UserDAO users = (UserDAO) context.getAttribute("UserDAO");
+		
+		User user = users.getUsers().get(naziv);
+			
+		if(user == null)
+		{
+			return Response.status(400).build();
+		}
+		
+		return Response.ok(user).build();	
+	}
+	
 	@POST
 	@Path("/user/fav/{naziv}")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -220,11 +239,14 @@ public class UserService {
 		
 		Oglas oglas = oglasi.getOglasi().get(naziv);
 		User u = (User)users.findID(idOne);
+		User prodavac = (User)users.getUsers().get(oglas.getProdavac());
 		
 		oglas.setStanje(Aktivan.DOSTAVLJEN);
 		
 		u.getDostavljeniProizvodi().add(oglas.getNaziv());
 		u.getPoruceniProizvodi().remove(oglas.getNaziv());
+		
+		prodavac.getIsporuceniOglasi().add(oglas.getNaziv());
 		context.setAttribute("UserDAO", users);
 		
 		return Response.ok().build();
@@ -267,6 +289,27 @@ public class UserService {
 		}
 		context.setAttribute("UserDAO", users);
 		
+		return Response.ok().build();
+	}
+	
+	
+	@POST
+	@Path("/userreport/{korisnickoIme}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response reportUser(@PathParam("korisnickoIme") String korisnickoIme,  @Context HttpServletRequest request) {
+		
+		UserDAO users = (UserDAO) context.getAttribute("UserDAO");
+		
+		User user = users.getUsers().get(korisnickoIme);
+			
+		if(user == null)
+		{
+			return Response.status(400).build();
+		}
+		
+		user.setPrijave(user.getPrijave() + 1);
+				
 		return Response.ok().build();
 	}
 

@@ -67,6 +67,7 @@ public class OglasService {
 		
 	}
 	
+	
 	@POST
 	@Path("/addarticle")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -207,6 +208,47 @@ public class OglasService {
 
 	
 	}
+	
+	@POST
+	@Path("/article/seller-delete/{naziv}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteArticleSeller(@PathParam("naziv") String naziv, @Context HttpServletRequest request) {
+	
+		OglasDAO oglasi = (OglasDAO) context.getAttribute("OglasDAO");
+		UserDAO users = (UserDAO) context.getAttribute("UserDAO");
+		
+		Oglas oglas = oglasi.getOglasi().get(naziv);		
+		
+		if(oglas.getStanje().equals(Aktivan.AKTUELAN)) {
+		oglas.setStanje(Aktivan.OBRISAN);
+		users.pretragaListi(naziv);
+		}
+		
+		context.setAttribute("OglasDAO", oglasi);
+		context.setAttribute("UserDAO", users);
+		
+		return Response.ok().build();
+
+	
+	}
+	
+	@POST
+	@Path("/article/edit")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response editArticle(Oglas o, @Context HttpServletRequest request) {
+		
+		OglasDAO oglasi = (OglasDAO) context.getAttribute("OglasDAO");
+		
+		oglasi.getOglasi().put(o.getNaziv(), o);
+		
+		context.setAttribute("OglasDAO", oglasi);
+		
+		return Response.ok().build();
+		
+	}
+	
 	
 
 }
