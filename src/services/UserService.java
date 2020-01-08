@@ -189,7 +189,6 @@ public class UserService {
 		OglasDAO oglasi = (OglasDAO) context.getAttribute("OglasDAO");
 		
 		User u = users.findID(idOne);
-		
 		ArrayList<Oglas> listaOglasa = new ArrayList<Oglas>();
 		
 		if(list.equals("omiljeni")) {
@@ -246,7 +245,10 @@ public class UserService {
 		u.getDostavljeniProizvodi().add(oglas.getNaziv());
 		u.getPoruceniProizvodi().remove(oglas.getNaziv());
 		
-		prodavac.getIsporuceniOglasi().add(oglas.getNaziv());
+		if(prodavac != null) {
+			prodavac.getIsporuceniOglasi().add(oglas.getNaziv());			
+		}
+		
 		context.setAttribute("UserDAO", users);
 		
 		return Response.ok().build();

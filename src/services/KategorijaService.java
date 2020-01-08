@@ -15,7 +15,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import dao.KategorijaDAO;
+import dao.UserDAO;
 import beans.Kategorija;
+import beans.Oglas;
 
 @Path("")
 public class KategorijaService {
@@ -40,6 +42,27 @@ public class KategorijaService {
 			KategorijaDAO kategorije = (KategorijaDAO) context.getAttribute("KategorijaDAO");
 			return kategorije.getKategorije().values();
 		}
+		
+		@POST
+		@Path("/addcategory")
+		@Consumes(MediaType.APPLICATION_JSON)
+		@Produces(MediaType.APPLICATION_JSON)
+		public Response dodajKategoriju(Kategorija k, @Context HttpServletRequest request) {
+			
+			KategorijaDAO kategorije = (KategorijaDAO) context.getAttribute("KategorijaDAO");
+			UserDAO users = (UserDAO) context.getAttribute("UserDAO");
+			
+			if(kategorije.getKategorije().containsKey(k.getNaziv())) {
+				return Response.status(400).build();
+			}
+			
+			kategorije.getKategorije().put(k.getNaziv(), k);
+			context.setAttribute("KategorijaDAO", kategorije);
+			
+			return Response.ok().build();
+			
+		}
+
 		
 		
 	
