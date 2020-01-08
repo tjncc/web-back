@@ -18,15 +18,17 @@ public class Kategorija {
 		this.naziv = naziv;
 		this.opis = opis;
 		this.oglasi = oglasi;
+		this.aktivna = true;
 	}
 	
 	public Kategorija(String naziv) {
 
 		this.naziv = naziv;
+		this.aktivna = true;
 	}
 	
 	public Kategorija() {
-		
+		this.aktivna = true;
 	}
 
 	public String getNaziv() {

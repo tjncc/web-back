@@ -1,9 +1,11 @@
 package dao;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
 import beans.Kategorija;
+import beans.Oglas;
 
 
 public class KategorijaDAO {
@@ -46,6 +48,17 @@ public class KategorijaDAO {
 
 	public HashMap<String, Kategorija> getKategorije() {
 		return kategorije;
+	}
+	
+	public ArrayList<Kategorija> kategorijePrikaz(){
+		ArrayList<Kategorija> aktuelne = new ArrayList<Kategorija>();
+		
+		for(Kategorija kat: kategorije.values()) {
+			if(kat.aktivna == true) {
+				aktuelne.add(kat);
+			}
+		}
+		return aktuelne;
 	}
 
 	public void setKategorije(HashMap<String, Kategorija> kategorije) {

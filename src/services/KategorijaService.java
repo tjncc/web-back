@@ -9,12 +9,14 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import dao.KategorijaDAO;
+import dao.OglasDAO;
 import dao.UserDAO;
 import beans.Kategorija;
 import beans.Oglas;
@@ -40,7 +42,7 @@ public class KategorijaService {
 		public Collection<Kategorija> getKategorije(@Context HttpServletRequest request)
 		{
 			KategorijaDAO kategorije = (KategorijaDAO) context.getAttribute("KategorijaDAO");
-			return kategorije.getKategorije().values();
+			return kategorije.kategorijePrikaz();
 		}
 		
 		@POST
@@ -62,7 +64,53 @@ public class KategorijaService {
 			return Response.ok().build();
 			
 		}
-
+		
+		@GET
+		@Path("/categoryinfo/{naziv}")
+		@Consumes(MediaType.APPLICATION_JSON)
+		@Produces(MediaType.APPLICATION_JSON)
+		public Kategorija getJednaKat(@PathParam("naziv") String naziv,@Context HttpServletRequest request)	{
+			
+			KategorijaDAO kategorije = (KategorijaDAO) context.getAttribute("KategorijaDAO");
+			Kategorija kat = kategorije.findByName(naziv);
+			
+			return kat;
+		}
+		
+		@POST
+		@Path("/category/delete/{naziv}")
+		@Consumes(MediaType.APPLICATION_JSON)
+		@Produces(MediaType.APPLICATION_JSON)
+		public Response deleteArticle(@PathParam("naziv") String naziv, @Context HttpServletRequest request) {
+			KategorijaDAO kategorije = (KategorijaDAO) context.getAttribute("KategorijaDAO");
+			Kategorija kat = kategorije.findByName(naziv);
+			
+			if(kat == null) {
+				return Response.status(400).build();
+			}
+			
+			kat.setAktivna(false);
+			
+			context.setAttribute("KategorijaDAO", kategorije);
+			
+			return Response.ok().build();
+		}
+		
+		@POST
+		@Path("/category/edit")
+		@Consumes(MediaType.APPLICATION_JSON)
+		@Produces(MediaType.APPLICATION_JSON)
+		public Response editArticle(Kategorija k, @Context HttpServletRequest request) {
+			
+			KategorijaDAO kategorije = (KategorijaDAO) context.getAttribute("KategorijaDAO");
+			
+			kategorije.getKategorije().put(k.getNaziv(), k);
+			
+			context.setAttribute("KategorijaDAO", kategorije);
+			
+			return Response.ok().build();
+			
+		}
 		
 		
 	
