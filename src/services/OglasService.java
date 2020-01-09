@@ -250,5 +250,49 @@ public class OglasService {
 	}
 	
 	
+	@POST
+	@Path("/article/category/{naziv}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addCateg(@PathParam("naziv") String naziv, String o, @Context HttpServletRequest request) {
+		
+		OglasDAO oglasi = (OglasDAO) context.getAttribute("OglasDAO");
+		KategorijaDAO kategorije = (KategorijaDAO) context.getAttribute("KategorijaDAO");
+		
+		Oglas oglas = oglasi.getOglasi().get(o);
+		Kategorija kat = kategorije.findByName(naziv);
+		
+		for(String s: oglas.getKategorije()) {
+			if(s.equals(naziv)) {
+				return Response.status(400).build();
+			}
+		}
+		oglas.getKategorije().add(kat.getNaziv());
+		kat.getOglasi().add(oglas);
+		
+		
+		context.setAttribute("OglasDAO", oglasi);
+		context.setAttribute("KategorijaDAO", kategorije);
+		
+		
+		return Response.ok().build();
+	}
+	
+	
+	@GET
+	@Path("/category/articles/{naziv}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<Oglas> allArticlesinCat(@PathParam("naziv") String naziv, @Context HttpServletRequest request) {
+		
+		KategorijaDAO kategorije = (KategorijaDAO) context.getAttribute("KategorijaDAO");
+		OglasDAO oglasi = (OglasDAO) context.getAttribute("OglasDAO");
+		
+		Kategorija kat = kategorije.findByName(naziv);
+		
+		//ArrayList<Oglas> o = new ArrayList<Oglas>();
+		return oglasi.oglasiPrikazKateg(kat);
+		
+	}
 
 }

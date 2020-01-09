@@ -1,5 +1,6 @@
 package services;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.annotation.PostConstruct;
@@ -111,6 +112,20 @@ public class KategorijaService {
 			return Response.ok().build();
 			
 		}
+		/*
+		@GET
+		@Path("/categoryarticleinfo")
+		@Consumes(MediaType.APPLICATION_JSON)
+		@Produces(MediaType.APPLICATION_JSON)
+		public ArrayList<Kategorija> getKategorijeZaOglase(String nazivOglas, @Context HttpServletRequest request)
+		{
+			KategorijaDAO kategorije = (KategorijaDAO) context.getAttribute("KategorijaDAO");
+			OglasDAO oglasi = (OglasDAO) context.getAttribute("OglasDAO");
+			Oglas o = oglasi.getOglasi().get(nazivOglas);		
+			
+			return kategorije.kategorijeBezPostojecih(o);
+		}
+		*/
 		
 		
 	

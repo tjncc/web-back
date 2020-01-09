@@ -22,7 +22,7 @@ public class Oglas implements Comparable<Oglas> {
 	private String prodavac;	
 	private int omiljen;
 	
-	
+	private ArrayList<String> kategorije = new ArrayList<String>();
 	
 	public static enum Aktivan{
 	    AKTUELAN,
@@ -33,7 +33,7 @@ public class Oglas implements Comparable<Oglas> {
 	
 	public Oglas(String naziv, double cena, String opis, int brLajkova, int brDislajkova, String slika,
 			String datumPostavljanja, String datumIsticanja, ArrayList<Recenzija> recenzije,
-			String grad) {
+			String grad, ArrayList<String> kategorije) {
 		super();
 		this.naziv = naziv;
 		this.cena = cena;
@@ -47,6 +47,7 @@ public class Oglas implements Comparable<Oglas> {
 		this.recenzije = recenzije;
 		this.grad = grad;
 		this.omiljen = 0;
+		this.kategorije = kategorije;
 
 	}
 	
@@ -60,6 +61,7 @@ public class Oglas implements Comparable<Oglas> {
 		this.grad = "";		
 		this.recenzije = new ArrayList<Recenzija>();
 		this.stanje = Aktivan.AKTUELAN;
+		this.kategorije = new ArrayList<String>();
 		
 	}
 	
@@ -69,6 +71,7 @@ public class Oglas implements Comparable<Oglas> {
 		this.slika = slika;
 		this.stanje = Aktivan.AKTUELAN;
 		this.omiljen = omiljen;
+		this.kategorije = new ArrayList<String>();
 	}
 
 	public String getNaziv() {
@@ -175,6 +178,16 @@ public class Oglas implements Comparable<Oglas> {
 
 	public void setProdavac(String prodavac) {
 		this.prodavac = prodavac;
+	}
+	
+	
+
+	public ArrayList<String> getKategorije() {
+		return kategorije;
+	}
+
+	public void setKategorije(ArrayList<String> kategorije) {
+		this.kategorije = kategorije;
 	}
 
 	@Override

@@ -60,6 +60,30 @@ public class KategorijaDAO {
 		}
 		return aktuelne;
 	}
+	
+	/*
+	public ArrayList<Kategorija> kategorijeBezPostojecih(Oglas oglas){
+		ArrayList<Kategorija> aktuelne = new ArrayList<Kategorija>();
+		ArrayList<String> kateg = new ArrayList<String>();
+		
+		kateg = oglas.getKategorije();
+		
+		for(Kategorija kat: kategorije.values()) {
+			if(kat.aktivna == true) {
+				for(String nazKateg: kateg) {
+					if(!nazKateg.equals(kat)) {
+						aktuelne.add(kat);
+					}
+					
+				}
+				
+			}
+		}
+		return aktuelne;
+	}
+	*/
+	
+
 
 	public void setKategorije(HashMap<String, Kategorija> kategorije) {
 		this.kategorije = kategorije;
