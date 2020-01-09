@@ -112,20 +112,29 @@ public class KategorijaService {
 			return Response.ok().build();
 			
 		}
-		/*
-		@GET
-		@Path("/categoryarticleinfo")
+
+		
+		@POST
+		@Path("/category/deletearticle/{naziv}")
 		@Consumes(MediaType.APPLICATION_JSON)
 		@Produces(MediaType.APPLICATION_JSON)
-		public ArrayList<Kategorija> getKategorijeZaOglase(String nazivOglas, @Context HttpServletRequest request)
-		{
+		public ArrayList<Oglas> deleteArticleCategory(@PathParam("naziv") String naziv, Kategorija k, @Context HttpServletRequest request) {
+			
 			KategorijaDAO kategorije = (KategorijaDAO) context.getAttribute("KategorijaDAO");
 			OglasDAO oglasi = (OglasDAO) context.getAttribute("OglasDAO");
-			Oglas o = oglasi.getOglasi().get(nazivOglas);		
 			
-			return kategorije.kategorijeBezPostojecih(o);
+			Kategorija kat = kategorije.findByName(k.getNaziv());
+			Oglas o = oglasi.findID(naziv);
+			
+			kat.getOglasi().remove(o);
+			o.getKategorije().remove(k.getNaziv());
+			
+			context.setAttribute("KategorijaDAO", kategorije);
+			context.setAttribute("OglasDAO", oglasi);
+			
+			return oglasi.oglasiPrikazKateg(kat);
+			
 		}
-		*/
 		
 		
 	
