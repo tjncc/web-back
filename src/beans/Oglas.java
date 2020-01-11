@@ -15,7 +15,7 @@ public class Oglas implements Comparable<Oglas> {
 	private String slika;
 	private String datumPostavljanja;
 	private String datumIsticanja;
-	private ArrayList<Recenzija> recenzije = new ArrayList<Recenzija>();
+	private ArrayList<UUID> recenzije = new ArrayList<UUID>();
 	private String grad;
 	private Aktivan stanje;
 	
@@ -32,8 +32,8 @@ public class Oglas implements Comparable<Oglas> {
 	}
 	
 	public Oglas(String naziv, double cena, String opis, int brLajkova, int brDislajkova, String slika,
-			String datumPostavljanja, String datumIsticanja, ArrayList<Recenzija> recenzije,
-			String grad, ArrayList<String> kategorije) {
+			String datumPostavljanja, String datumIsticanja,
+			String grad) {
 		super();
 		this.naziv = naziv;
 		this.cena = cena;
@@ -44,10 +44,10 @@ public class Oglas implements Comparable<Oglas> {
 		this.datumPostavljanja = datumPostavljanja;
 		this.datumIsticanja = datumIsticanja;
 		this.stanje = Aktivan.AKTUELAN;
-		this.recenzije = recenzije;
+		this.recenzije = new ArrayList<UUID>();
 		this.grad = grad;
 		this.omiljen = 0;
-		this.kategorije = kategorije;
+		this.kategorije = new ArrayList<String>();
 
 	}
 	
@@ -59,7 +59,7 @@ public class Oglas implements Comparable<Oglas> {
 		this.opis = "";
 		this.datumIsticanja = null;
 		this.grad = "";		
-		this.recenzije = new ArrayList<Recenzija>();
+		this.recenzije = new ArrayList<UUID>();
 		this.stanje = Aktivan.AKTUELAN;
 		this.kategorije = new ArrayList<String>();
 		
@@ -71,6 +71,7 @@ public class Oglas implements Comparable<Oglas> {
 		this.slika = slika;
 		this.stanje = Aktivan.AKTUELAN;
 		this.omiljen = omiljen;
+		this.recenzije = new ArrayList<UUID>();
 		this.kategorije = new ArrayList<String>();
 	}
 
@@ -140,11 +141,11 @@ public class Oglas implements Comparable<Oglas> {
 
 
 
-	public ArrayList<Recenzija> getRecenzije() {
+	public ArrayList<UUID> getRecenzije() {
 		return recenzije;
 	}
 
-	public void setRecenzije(ArrayList<Recenzija> recenzije) {
+	public void setRecenzije(ArrayList<UUID> recenzije) {
 		this.recenzije = recenzije;
 	}
 

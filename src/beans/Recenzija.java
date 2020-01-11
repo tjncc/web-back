@@ -4,21 +4,21 @@ import java.util.UUID;
 
 public class Recenzija {
 	
-	UUID idOne = UUID.randomUUID();
+	UUID idOneRec = UUID.randomUUID();
 	
-	public Oglas oglas;
-	public User recezent;
+	public String oglas;
+	public String recezent;
 	public String naziv;
 	public String sadrzaj;
 	public String slika;
 	public boolean tacanOglas;
 	public boolean ispostovan;
 	
-	public Recenzija(Oglas oglas, User recezent, String naziv, String sadrzaj, String slika, boolean tacanOglas,
+	public Recenzija(String oglas, String naziv, String sadrzaj, String slika, boolean tacanOglas,
 			boolean ispostovan) {
 		super();
+		this.idOneRec = UUID.randomUUID();
 		this.oglas = oglas;
-		this.recezent = recezent;
 		this.naziv = naziv;
 		this.sadrzaj = sadrzaj;
 		this.slika = slika;
@@ -26,23 +26,56 @@ public class Recenzija {
 		this.ispostovan = ispostovan;
 	}
 	
+	public Recenzija(String oglas, String naziv, String sadrzaj, boolean tacanOglas,
+			boolean ispostovan) {
+		super();
+		this.idOneRec = UUID.randomUUID();
+		this.oglas = oglas;
+		this.naziv = naziv;
+		this.sadrzaj = sadrzaj;
+		this.tacanOglas = tacanOglas;
+		this.ispostovan = ispostovan;
+	}
+	
+	public Recenzija(String oglas, String naziv, String sadrzaj) {
+		super();
+		this.idOneRec = UUID.randomUUID();
+		this.oglas = oglas;
+		this.naziv = naziv;
+		this.sadrzaj = sadrzaj;
+		this.tacanOglas = true;
+		this.ispostovan = true;
+	}
+	
+	
 	public Recenzija() {
 		super();
+		UUID.randomUUID();
+	}
+	
+	
+
+	public UUID getIdOneRec() {
+		return idOneRec;
 	}
 
-	public Oglas getOglas() {
+	public void setIdOneRec(UUID idOneRec) {
+		this.idOneRec = idOneRec;
+	}
+
+	public String getOglas() {
 		return oglas;
 	}
 
-	public void setOglas(Oglas oglas) {
+	public void setOglas(String oglas) {
 		this.oglas = oglas;
 	}
 
-	public User getRecezent() {
+	public String getRecezent() {
 		return recezent;
 	}
 
-	public void setRecezent(User recezent) {
+	public void setRecezent(String recezent) {
 		this.recezent = recezent;
 	}
 
