@@ -27,6 +27,8 @@ public class User{
 	private int brDislajkova;
 	private int prijave;
 	
+	private ArrayList<String> lajkovali = new ArrayList<String>();
+	
 	
 	public static enum Uloga{
 		KUPAC,
@@ -39,6 +41,9 @@ public class User{
 		this.datumRegistracije = java.time.LocalDate.now().toString();
 		this.idOne = "";
 		this.prijave = 0;
+		this.brLajkova = 0;
+		this.brDislajkova = 0;
+		this.lajkovali = new ArrayList<String>();
 	}
 	
 
@@ -54,8 +59,11 @@ public class User{
 		this.telefon = telefon;
 		this.grad = grad;
 		this.email = email;
+		this.brLajkova = 0;
+		this.brDislajkova = 0;
 		this.datumRegistracije = java.time.LocalDate.now().toString();
 		this.prijave = 0;
+		this.lajkovali = new ArrayList<String>();
 
 	}
 	
@@ -242,6 +250,18 @@ public class User{
 
 	public void setPrijave(int prijave) {
 		this.prijave = prijave;
+	}
+
+
+
+	public ArrayList<String> getLajkovali() {
+		return lajkovali;
+	}
+
+
+
+	public void setLajkovali(ArrayList<String> lajkovali) {
+		this.lajkovali = lajkovali;
 	}
 
 

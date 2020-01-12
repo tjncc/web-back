@@ -6,62 +6,64 @@ public class Recenzija {
 	
 	UUID idOneRec = UUID.randomUUID();
 	
-	public String oglas;
-	public String recezent;
-	public String naziv;
-	public String sadrzaj;
-	public String slika;
-	public boolean tacanOglas;
-	public boolean ispostovan;
+	private String oglas;
+	private String recezent;
+	private String naziv;
+	private String sadrzaj;
+	private String slika;
+	private boolean tacanOglas;
+	private boolean ispostovan;
+	
+	private String prodavac;
+	private boolean aktivna;
+	private String idRec = UUID.randomUUID().toString();
 	
 	public Recenzija(String oglas, String naziv, String sadrzaj, String slika, boolean tacanOglas,
-			boolean ispostovan) {
+			boolean ispostovan, String prodavac) {
 		super();
-		this.idOneRec = UUID.randomUUID();
+		this.idRec = UUID.randomUUID().toString();
 		this.oglas = oglas;
 		this.naziv = naziv;
 		this.sadrzaj = sadrzaj;
 		this.slika = slika;
 		this.tacanOglas = tacanOglas;
 		this.ispostovan = ispostovan;
+		this.aktivna = true;
+		this.prodavac = prodavac;
 	}
 	
 	public Recenzija(String oglas, String naziv, String sadrzaj, boolean tacanOglas,
-			boolean ispostovan) {
+			boolean ispostovan, String prodavac) {
 		super();
-		this.idOneRec = UUID.randomUUID();
+		this.idRec = UUID.randomUUID().toString();
 		this.oglas = oglas;
 		this.naziv = naziv;
 		this.sadrzaj = sadrzaj;
 		this.tacanOglas = tacanOglas;
 		this.ispostovan = ispostovan;
+		this.prodavac = prodavac;
+		this.aktivna = true;
 	}
 	
-	public Recenzija(String oglas, String naziv, String sadrzaj) {
+	public Recenzija(String oglas, String naziv, String sadrzaj, String prodavac) {
 		super();
-		this.idOneRec = UUID.randomUUID();
+		this.idRec = UUID.randomUUID().toString();
 		this.oglas = oglas;
 		this.naziv = naziv;
 		this.sadrzaj = sadrzaj;
+		this.prodavac = prodavac;
 		this.tacanOglas = true;
 		this.ispostovan = true;
+		this.aktivna = true;
 	}
 	
 	
 	public Recenzija() {
 		super();
-		UUID.randomUUID();
+		this.idRec = UUID.randomUUID().toString();
+		this.aktivna = true;
 	}
 	
-	
-
-	public UUID getIdOneRec() {
-		return idOneRec;
-	}
-
-	public void setIdOneRec(UUID idOneRec) {
-		this.idOneRec = idOneRec;
-	}
 
 	public String getOglas() {
 		return oglas;
@@ -118,6 +120,35 @@ public class Recenzija {
 	public void setIspostovan(boolean ispostovan) {
 		this.ispostovan = ispostovan;
 	}
+
+	public boolean isAktivna() {
+		return aktivna;
+	}
+
+	public void setAktivna(boolean aktivna) {
+		this.aktivna = aktivna;
+	}
+
+	public String getIdRec() {
+		return idRec;
+	}
+
+	public void setIdRec(String idRec) {
+		this.idRec = idRec;
+	}
+
+	public String getProdavac() {
+		return prodavac;
+	}
+
+	public void setProdavac(String prodavac) {
+		this.prodavac = prodavac;
+	}
+	
+	
+	
+	
+	
 	
 	
 

@@ -218,6 +218,7 @@ public class UserService {
 		Oglas oglas = oglasi.getOglasi().get(naziv);
 		User u = (User)users.findID(idOne);
 		oglas.setStanje(Aktivan.REALIZACIJA);
+		oglas.setKupac(u.getKorisnickoIme());
 		
 		u.getPoruceniProizvodi().add(oglas.getNaziv());
 		context.setAttribute("UserDAO", users);
@@ -241,6 +242,7 @@ public class UserService {
 		User prodavac = (User)users.getUsers().get(oglas.getProdavac());
 		
 		oglas.setStanje(Aktivan.DOSTAVLJEN);
+		oglas.setKupac(u.getKorisnickoIme());
 		
 		u.getDostavljeniProizvodi().add(oglas.getNaziv());
 		u.getPoruceniProizvodi().remove(oglas.getNaziv());
@@ -311,11 +313,57 @@ public class UserService {
 		}
 		
 		user.setPrijave(user.getPrijave() + 1);
+		
+		context.setAttribute("UserDAO", users);
+				
+		return Response.ok().build();
+	}
+	
+	@POST
+	@Path("/user/like/{korisnickoIme}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response likeUser(@PathParam("korisnickoIme") String korisnickoIme,  @Context HttpServletRequest request) {
+		
+		UserDAO users = (UserDAO) context.getAttribute("UserDAO");
+		
+		User user = users.getUsers().get(korisnickoIme);
+			
+		if(user == null)
+		{
+			return Response.status(400).build();
+		}
+		
+		user.setBrLajkova(user.getBrLajkova() + 1);
+		user.getLajkovali().add(korisnickoIme);
+		
+		context.setAttribute("UserDAO", users);
 				
 		return Response.ok().build();
 	}
 
-	
+	@POST
+	@Path("/user/dislike/{korisnickoIme}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response dislikeUser(@PathParam("korisnickoIme") String korisnickoIme,  @Context HttpServletRequest request) {
+		
+		UserDAO users = (UserDAO) context.getAttribute("UserDAO");
+		
+		User user = users.getUsers().get(korisnickoIme);
+			
+		if(user == null)
+		{
+			return Response.status(400).build();
+		}
+		
+		user.setBrDislajkova(user.getBrDislajkova() + 1);
+		user.getLajkovali().add(korisnickoIme);
+		
+		context.setAttribute("UserDAO", users);
+				
+		return Response.ok().build();
+	}
 	
 	
 }

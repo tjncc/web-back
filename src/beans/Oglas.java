@@ -15,12 +15,13 @@ public class Oglas implements Comparable<Oglas> {
 	private String slika;
 	private String datumPostavljanja;
 	private String datumIsticanja;
-	private ArrayList<UUID> recenzije = new ArrayList<UUID>();
+	private ArrayList<String> recenzije = new ArrayList<String>();
 	private String grad;
 	private Aktivan stanje;
 	
 	private String prodavac;	
 	private int omiljen;
+	private String kupac;
 	
 	private ArrayList<String> kategorije = new ArrayList<String>();
 	
@@ -44,10 +45,12 @@ public class Oglas implements Comparable<Oglas> {
 		this.datumPostavljanja = datumPostavljanja;
 		this.datumIsticanja = datumIsticanja;
 		this.stanje = Aktivan.AKTUELAN;
-		this.recenzije = new ArrayList<UUID>();
+		this.recenzije = new ArrayList<String>();
 		this.grad = grad;
 		this.omiljen = 0;
+		this.prodavac = "zzzzzzzoga";
 		this.kategorije = new ArrayList<String>();
+		this.kupac = "";
 
 	}
 	
@@ -58,10 +61,12 @@ public class Oglas implements Comparable<Oglas> {
 		this.omiljen = 0;
 		this.opis = "";
 		this.datumIsticanja = null;
-		this.grad = "";		
-		this.recenzije = new ArrayList<UUID>();
+		this.grad = "";	
+		this.prodavac = "zzzzzzzoga";
+		this.recenzije = new ArrayList<String>();
 		this.stanje = Aktivan.AKTUELAN;
 		this.kategorije = new ArrayList<String>();
+		this.kupac = "";
 		
 	}
 	
@@ -69,10 +74,12 @@ public class Oglas implements Comparable<Oglas> {
 		this.naziv = naziv;
 		this.cena = cena;
 		this.slika = slika;
+		this.prodavac = "zzzzzzzoga";
 		this.stanje = Aktivan.AKTUELAN;
 		this.omiljen = omiljen;
-		this.recenzije = new ArrayList<UUID>();
+		this.recenzije = new ArrayList<String>();
 		this.kategorije = new ArrayList<String>();
+		this.kupac = "";
 	}
 
 	public String getNaziv() {
@@ -141,11 +148,11 @@ public class Oglas implements Comparable<Oglas> {
 
 
 
-	public ArrayList<UUID> getRecenzije() {
+	public ArrayList<String> getRecenzije() {
 		return recenzije;
 	}
 
-	public void setRecenzije(ArrayList<UUID> recenzije) {
+	public void setRecenzije(ArrayList<String> recenzije) {
 		this.recenzije = recenzije;
 	}
 
@@ -194,6 +201,14 @@ public class Oglas implements Comparable<Oglas> {
 	@Override
 	public int compareTo(Oglas oglas) {
 		return (omiljen > oglas.omiljen) ? -1 : (omiljen == oglas.omiljen ? 0 : 1);
+	}
+
+	public String getKupac() {
+		return kupac;
+	}
+
+	public void setKupac(String kupac) {
+		this.kupac = kupac;
 	}
 	
 	
