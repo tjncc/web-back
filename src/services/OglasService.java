@@ -20,8 +20,10 @@ import beans.Kategorija;
 import beans.Oglas;
 import beans.User;
 import beans.Oglas.Aktivan;
+import beans.Poruka;
 import dao.KategorijaDAO;
 import dao.OglasDAO;
+import dao.PorukaDAO;
 import dao.UserDAO;
 
 
@@ -195,12 +197,35 @@ public class OglasService {
 	
 		OglasDAO oglasi = (OglasDAO) context.getAttribute("OglasDAO");
 		UserDAO users = (UserDAO) context.getAttribute("UserDAO");
+		PorukaDAO poruke = (PorukaDAO) context.getAttribute("PorukaDAO");
+		Poruka p1 = new Poruka();
 		
-		Oglas oglas = oglasi.getOglasi().get(naziv);		
+		Oglas oglas = oglasi.getOglasi().get(naziv);
+		
+		if(oglas.getStanje().equals(Aktivan.DOSTAVLJEN) || oglas.getStanje().equals(Aktivan.REALIZACIJA)) {
+			Poruka p2 = new Poruka();
+			p2.setPrimalac(oglas.getKupac());
+			p2.setNaslov("Obrisan oglas");
+			p2.setPosiljalac("Automatska poruka");
+			p2.setSadrzaj("Admin je obrisao oglas sa nazivom " + oglas.getNaziv() + " koji ste porucili.");
+
+			poruke.getPoruke().put(p2.getIdPoruka(), p2);
+		}
+		
 		
 		oglas.setStanje(Aktivan.OBRISAN);
 		users.pretragaListi(naziv);
 		
+		p1.setNaslov("Obrisan oglas");
+		p1.setPosiljalac("Automatska poruka");
+		p1.setPrimalac(oglas.getProdavac());
+		p1.setSadrzaj("Admin je obrisao vaš oglas sa nazivom " + oglas.getNaziv() + ".");
+		
+		
+		poruke.getPoruke().put(p1.getIdPoruka(), p1);
+		
+
+		context.setAttribute("PorukaDAO", poruke);
 		context.setAttribute("OglasDAO", oglasi);
 		context.setAttribute("UserDAO", users);
 		
@@ -217,16 +242,27 @@ public class OglasService {
 	
 		OglasDAO oglasi = (OglasDAO) context.getAttribute("OglasDAO");
 		UserDAO users = (UserDAO) context.getAttribute("UserDAO");
+		PorukaDAO poruke = (PorukaDAO) context.getAttribute("PorukaDAO");
+		Poruka p = new Poruka();
 		
 		Oglas oglas = oglasi.getOglasi().get(naziv);		
 		
 		if(oglas.getStanje().equals(Aktivan.AKTUELAN)) {
-		oglas.setStanje(Aktivan.OBRISAN);
-		users.pretragaListi(naziv);
+			oglas.setStanje(Aktivan.OBRISAN);
+			users.pretragaListi(naziv);
 		}
+		
+		p.setNaslov("Obrisan oglas");
+		p.setPosiljalac("Automatska poruka");
+		p.setPrimalac("admin");
+		p.setSadrzaj("Prodavac " + oglas.getProdavac() + " je obrisao oglas sa nazivom " + oglas.getNaziv() + ".");
+		
+		poruke.getPoruke().put(p.getIdPoruka(), p);
 		
 		context.setAttribute("OglasDAO", oglasi);
 		context.setAttribute("UserDAO", users);
+		context.setAttribute("PorukaDAO", poruke);
+		
 		
 		return Response.ok().build();
 
@@ -240,15 +276,37 @@ public class OglasService {
 	public Response editArticle(Oglas o, @Context HttpServletRequest request) {
 		
 		OglasDAO oglasi = (OglasDAO) context.getAttribute("OglasDAO");
+		PorukaDAO poruke = (PorukaDAO) context.getAttribute("PorukaDAO");
+		Poruka p1 = new Poruka();
 		
 		oglasi.getOglasi().put(o.getNaziv(), o);
 		
+		if(o.getStanje().equals(Aktivan.DOSTAVLJEN) || o.getStanje().equals(Aktivan.REALIZACIJA)) {
+			Poruka p2 = new Poruka();
+			p2.setPrimalac(o.getKupac());
+			p2.setNaslov("Izmenjen oglas");
+			p2.setPosiljalac("Automatska poruka");
+			p2.setNaziv(o.getNaziv());
+			p2.setSadrzaj("Admin je izmenio gore naveden oglas koji ste porucili.");
+
+			poruke.getPoruke().put(p2.getIdPoruka(), p2);
+		}
+		
+		p1.setNaslov("Izmenjen oglas");
+		p1.setPosiljalac("Automatska poruka");
+		p1.setPrimalac(o.getProdavac());
+		p1.setSadrzaj("Admin je izmenio vaš gore naveden oglas.");
+		
+		poruke.getPoruke().put(p1.getIdPoruka(), p1);
+
+		context.setAttribute("PorukaDAO", poruke);		
 		context.setAttribute("OglasDAO", oglasi);
 		
 		return Response.ok().build();
 		
 	}
 	
+
 	
 	@POST
 	@Path("/article/category/{naziv}")
@@ -293,6 +351,47 @@ public class OglasService {
 		//ArrayList<Oglas> o = new ArrayList<Oglas>();
 		return oglasi.oglasiPrikazKateg(kat);
 		
+	}
+	
+	
+	@POST
+	@Path("/report/article/{naziv}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response reportArticle(@PathParam("naziv") String naziv, String idOne, @Context HttpServletRequest request) {
+		
+		OglasDAO oglasi = (OglasDAO) context.getAttribute("OglasDAO");
+		PorukaDAO poruke = (PorukaDAO) context.getAttribute("PorukaDAO");
+		UserDAO users = (UserDAO) context.getAttribute("UserDAO");
+
+		Poruka p = new Poruka();
+		
+		Oglas oglas = oglasi.getOglasi().get(naziv);
+		User user = users.getUsers().get(oglas.getProdavac());
+		User ulogovan = users.findID(idOne);
+
+		for(String ime: oglas.getPrijavili()) {
+			if(ime.equals(ulogovan.getKorisnickoIme())) {
+				return Response.status(400).build();
+			}
+		}
+		
+		oglas.setPrijave(oglas.getPrijave() + 1);
+		oglas.getPrijavili().add(ulogovan.getKorisnickoIme());
+		
+		p.setNaslov("Upozorenje");
+		p.setNaziv(oglas.getNaziv());
+		p.setPosiljalac("Automatska poruka");
+		p.setPrimalac(user.getKorisnickoIme());
+		p.setSadrzaj("Kupac je prijavio vaš gore navedeni oglas zbog prevare. Upozoravamo vas da ne bi došlo do ponovne prijave.");
+		
+		poruke.getPoruke().put(p.getIdPoruka(), p);
+
+		context.setAttribute("PorukaDAO", poruke);
+		context.setAttribute("OglasDAO", oglasi);
+		context.setAttribute("UserDAO", users);
+				
+		return Response.ok().build();
 	}
 
 }

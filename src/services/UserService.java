@@ -2,6 +2,7 @@ package services;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
@@ -20,9 +21,11 @@ import javax.ws.rs.core.Response;
 import beans.User;
 import beans.User.Uloga;
 import beans.Oglas;
+import beans.Poruka;
 import beans.Oglas.Aktivan;
 import dao.UserDAO;
 import dao.OglasDAO;
+import dao.PorukaDAO;
 
 
 @Path("")
@@ -236,6 +239,9 @@ public class UserService {
 	
 		UserDAO users = (UserDAO) context.getAttribute("UserDAO");
 		OglasDAO oglasi = (OglasDAO) context.getAttribute("OglasDAO");
+		PorukaDAO poruke = (PorukaDAO) context.getAttribute("PorukaDAO");
+		Poruka p = new Poruka();
+
 		
 		Oglas oglas = oglasi.getOglasi().get(naziv);
 		User u = (User)users.findID(idOne);
@@ -251,6 +257,16 @@ public class UserService {
 			prodavac.getIsporuceniOglasi().add(oglas.getNaziv());			
 		}
 		
+		p.setNaziv(oglas.getNaziv());
+		p.setNaslov("Dostavljen proizvod");
+		p.setPosiljalac("Automatska poruka");
+		p.setPrimalac(oglas.getProdavac());
+		p.setSadrzaj("Kupac " + oglas.getKupac() + " je oznacio da mu je dostavljen gore naveden oglas.");
+		
+		poruke.getPoruke().put(p.getIdPoruka(), p);
+		
+		context.setAttribute("PorukaDAO", poruke);
+		context.setAttribute("OglasDAO", oglasi);
 		context.setAttribute("UserDAO", users);
 		
 		return Response.ok().build();
@@ -301,18 +317,37 @@ public class UserService {
 	@Path("/userreport/{korisnickoIme}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response reportUser(@PathParam("korisnickoIme") String korisnickoIme,  @Context HttpServletRequest request) {
+	public Response reportUser(@PathParam("korisnickoIme") String korisnickoIme, String idOne,  @Context HttpServletRequest request) {
 		
 		UserDAO users = (UserDAO) context.getAttribute("UserDAO");
+		PorukaDAO poruke = (PorukaDAO) context.getAttribute("PorukaDAO");
+		Poruka p = new Poruka();
+
 		
 		User user = users.getUsers().get(korisnickoIme);
-			
-		if(user == null)
-		{
-			return Response.status(400).build();
+		User ulogovan = users.findID(idOne);
+
+		
+		for(String ime: user.getPrijavili()) {
+			if(ime.equals(ulogovan.getKorisnickoIme())) {
+				return Response.status(400).build();
+			}
 		}
+
 		
 		user.setPrijave(user.getPrijave() + 1);
+		
+		user.getPrijavili().add(ulogovan.getKorisnickoIme());
+		
+		p.setNaslov("Upozorenje");
+		p.setPosiljalac("Automatska poruka");
+		p.setPrimalac(user.getKorisnickoIme());
+		p.setSadrzaj("Kupac je prijavio vaš profil zbog prevare. Upozoravamo vas da ne bi došlo do ponovne prijave.");
+		
+		poruke.getPoruke().put(p.getIdPoruka(), p);
+
+		context.setAttribute("PorukaDAO", poruke);		
+
 		
 		context.setAttribute("UserDAO", users);
 				
@@ -363,6 +398,39 @@ public class UserService {
 		context.setAttribute("UserDAO", users);
 				
 		return Response.ok().build();
+	}
+	
+	
+	@GET
+	@Path("/user/list/{naziv}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<User> userList(@PathParam("naziv") String naziv,  @Context HttpServletRequest request) {
+		
+		UserDAO users = (UserDAO) context.getAttribute("UserDAO");
+		
+		if(naziv == "KUPAC") {
+			return users.getAllUsers();
+		} else if (naziv == "PRODAVAC") {
+			return users.getAllSellers();
+		} else if (naziv == "ADMIN"){
+			return users.getAllAdmins();
+		} else {
+			return null;
+		}
+		
+	}
+	
+	@GET
+	@Path("/allusers")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<User> allUsers(@Context HttpServletRequest request) {
+		
+		UserDAO users = (UserDAO) context.getAttribute("UserDAO");
+		
+		return users.getUsersList();
+		
 	}
 	
 	

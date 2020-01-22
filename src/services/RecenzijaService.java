@@ -22,8 +22,10 @@ import beans.Oglas;
 import beans.Recenzija;
 import beans.User;
 import beans.Oglas.Aktivan;
+import beans.Poruka;
 import dao.KategorijaDAO;
 import dao.OglasDAO;
+import dao.PorukaDAO;
 import dao.RecenzijaDAO;
 import dao.UserDAO;
 
@@ -89,19 +91,30 @@ public class RecenzijaService {
 	{
 		RecenzijaDAO recenzije = (RecenzijaDAO) context.getAttribute("RecenzijaDAO");
 		OglasDAO oglasi = (OglasDAO) context.getAttribute("OglasDAO");
-		System.out.println(recenzija.getOglas());
+		PorukaDAO poruke = (PorukaDAO) context.getAttribute("PorukaDAO");
+		
+		Poruka p = new Poruka();
 		
 		if(!recenzija.getOglas().contentEquals("RECENZIJAPRODAVCA")) {
 			Oglas o = oglasi.findID(recenzija.getOglas());
 			o.getRecenzije().add(recenzija.getIdRec());
 			recenzija.setProdavac(o.getProdavac());
+			p.setNaziv(o.getNaziv());
+			p.setSadrzaj("Kupac " + recenzija.getRecezent() + " je ostavio recenziju za gore naveden oglas.");
+		} else {
+			p.setSadrzaj("Kupac " + recenzija.getRecezent() + " je ostavio recenziju za vaš profil.");
 		}
-		//recenzija.setAktivna(true);
-		//recenzija.setIdRec(UUID.randomUUID().toString());
 		
 		
+		p.setNaslov("Dodata recenzija");
+		p.setPosiljalac("Automatska poruka");
+		p.setPrimalac(recenzija.getProdavac());
+		
+		
+		poruke.getPoruke().put(p.getIdPoruka(), p);	
 		recenzije.getRecenzije().put(recenzija.getIdRec(), recenzija);
 		
+		context.setAttribute(p.getIdPoruka(), p);
 		context.setAttribute("OglasDAO", oglasi);
 		context.setAttribute("RecenzijaDAO", recenzije);
 		
@@ -148,11 +161,31 @@ public class RecenzijaService {
 	@Path("/review/edit")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response editArticle(Recenzija rec, @Context HttpServletRequest request) {
+	public Response editArticle(Recenzija recenzija, @Context HttpServletRequest request) {
 		
 		RecenzijaDAO recenzije = (RecenzijaDAO) context.getAttribute("RecenzijaDAO");
+		PorukaDAO poruke = (PorukaDAO) context.getAttribute("PorukaDAO");
 		
-		recenzije.getRecenzije().put(rec.getIdRec(), rec);
+		Poruka p = new Poruka();
+		
+		recenzije.getRecenzije().put(recenzija.getIdRec(), recenzija);
+		
+		if(recenzija.getOglas().contentEquals("RECENZIJAPRODAVCA")){
+			p.setSadrzaj("Kupac " + recenzija.getRecezent() + " je izmenio recenziju vašeg profila.");
+		} else {
+			p.setNaziv(recenzija.getOglas());
+			p.setSadrzaj("Kupac " + recenzija.getRecezent() + " je izmenio recenziju navedenog oglasa.");
+		}
+		
+		p.setNaslov("Izmenjena recenzija");
+		p.setPosiljalac("Automatska poruka");
+		p.setPrimalac(recenzija.getProdavac());
+		
+		
+		poruke.getPoruke().put(p.getIdPoruka(), p);	
+		recenzije.getRecenzije().put(recenzija.getIdRec(), recenzija);
+		
+		context.setAttribute(p.getIdPoruka(), p);
 		
 		context.setAttribute("RecenzijaDAO", recenzije);
 		

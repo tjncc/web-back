@@ -1,6 +1,7 @@
 package dao;
 
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,6 +48,17 @@ public class UserDAO {
 		return users;
 	}
 	
+	public ArrayList<User> getUsersList() {
+		ArrayList<User> listaSvi = new ArrayList<User>();
+		
+		for(User user: users.values()) {
+			listaSvi.add(user);
+		}
+		
+		return listaSvi;
+	}
+	
+	
 	public void setUsers(HashMap<String, User> users) {
 		this.users = users;
 	}
@@ -83,6 +95,42 @@ public class UserDAO {
 				user.getPoruceniProizvodi().remove(naziv);
 			}
 		}
+	}
+	
+	public ArrayList<User> getAllUsers() {
+		ArrayList<User> sviKupci = new ArrayList<User>();
+		
+		for(User user: users.values()) {
+			if(user.getUloga().equals(Uloga.KUPAC)) {
+				sviKupci.add(user);
+			}
+		}
+		
+		return sviKupci;
+	}
+	
+	public ArrayList<User> getAllSellers() {
+		ArrayList<User> sviProdavci = new ArrayList<User>();
+		
+		for(User user: users.values()) {
+			if(user.getUloga().equals(Uloga.PRODAVAC)) {
+				sviProdavci.add(user);
+			}
+		}
+		
+		return sviProdavci;
+	}
+	
+	public ArrayList<User> getAllAdmins() {
+		ArrayList<User> sviAdmini = new ArrayList<User>();
+		
+		for(User user: users.values()) {
+			if(user.getUloga().equals(Uloga.ADMINISTRATOR)) {
+				sviAdmini.add(user);
+			}
+		}
+		
+		return sviAdmini;
 	}
 	
 	
