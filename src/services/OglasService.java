@@ -37,7 +37,8 @@ public class OglasService {
 	public void init() {
 		
 		if(context.getAttribute("OglasDAO") == null) {
-			context.setAttribute("OglasDAO", new OglasDAO());
+			String contextPath = context.getRealPath("");
+			context.setAttribute("OglasDAO", new OglasDAO(contextPath));
 		}
 		
 	}
@@ -90,6 +91,9 @@ public class OglasService {
 		context.setAttribute("OglasDAO", oglasi);
 		context.setAttribute("UserDAO", users);
 		
+		oglasi.saveOglas(context.getRealPath(""), oglasi);
+		users.saveUser(context.getRealPath(""), users);
+		
 		return Response.ok().build();
 		
 	}
@@ -133,32 +137,45 @@ public class OglasService {
 	@Path("/article/like/{naziv}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response likeArticle(@PathParam("naziv") String naziv, @Context HttpServletRequest request) {
+	public Response likeArticle(@PathParam("naziv") String naziv,String idOne, @Context HttpServletRequest request) {
 		
 		OglasDAO oglasi = (OglasDAO) context.getAttribute("OglasDAO");
+		UserDAO users = (UserDAO) context.getAttribute("UserDAO");
+		
+		User u = users.findID(idOne);
 		
 		Oglas oglas = oglasi.getOglasi().get(naziv);
 		
 		oglas.setBrLajkova(oglas.getBrLajkova()+1);
+		oglas.getLajkovali().add(u.getKorisnickoIme());
+		
 		context.setAttribute("OglasDAO", oglasi);
+		oglasi.saveOglas(context.getRealPath(""), oglasi);
 		
 		return Response.ok().build();
 		
 	}
 	
 	
-	@GET
+	@POST
 	@Path("/article/dislike/{naziv}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response dislikeArticle(@PathParam("naziv") String naziv, @Context HttpServletRequest request) {
+	public Response dislikeArticle(@PathParam("naziv") String naziv, String idOne, @Context HttpServletRequest request) {
 		
 		OglasDAO oglasi = (OglasDAO) context.getAttribute("OglasDAO");
+		UserDAO users = (UserDAO) context.getAttribute("UserDAO");
+		
+		User u = users.findID(idOne);
+
 		
 		Oglas oglas = oglasi.getOglasi().get(naziv);
 		
 		oglas.setBrDislajkova(oglas.getBrDislajkova()+1);
+		oglas.getLajkovali().add(u.getKorisnickoIme());
+		
 		context.setAttribute("OglasDAO", oglasi);
+		oglasi.saveOglas(context.getRealPath(""), oglasi);
 		
 		return Response.ok().build();
 		
@@ -229,6 +246,10 @@ public class OglasService {
 		context.setAttribute("OglasDAO", oglasi);
 		context.setAttribute("UserDAO", users);
 		
+		oglasi.saveOglas(context.getRealPath(""), oglasi);
+		users.saveUser(context.getRealPath(""), users);
+		poruke.savePoruka(context.getRealPath(""), poruke);
+		
 		return Response.ok().build();
 
 	
@@ -262,6 +283,10 @@ public class OglasService {
 		context.setAttribute("OglasDAO", oglasi);
 		context.setAttribute("UserDAO", users);
 		context.setAttribute("PorukaDAO", poruke);
+		
+		oglasi.saveOglas(context.getRealPath(""), oglasi);
+		poruke.savePoruka(context.getRealPath(""), poruke);
+		users.saveUser(context.getRealPath(""), users);
 		
 		
 		return Response.ok().build();
@@ -302,6 +327,9 @@ public class OglasService {
 		context.setAttribute("PorukaDAO", poruke);		
 		context.setAttribute("OglasDAO", oglasi);
 		
+		oglasi.saveOglas(context.getRealPath(""), oglasi);
+		poruke.savePoruka(context.getRealPath(""), poruke);
+		
 		return Response.ok().build();
 		
 	}
@@ -331,6 +359,9 @@ public class OglasService {
 		
 		context.setAttribute("OglasDAO", oglasi);
 		context.setAttribute("KategorijaDAO", kategorije);
+		
+		oglasi.saveOglas(context.getRealPath(""), oglasi);
+		kategorije.saveKategorija(context.getRealPath(""), kategorije);
 		
 		
 		return Response.ok().build();
@@ -390,6 +421,10 @@ public class OglasService {
 		context.setAttribute("PorukaDAO", poruke);
 		context.setAttribute("OglasDAO", oglasi);
 		context.setAttribute("UserDAO", users);
+		
+		oglasi.saveOglas(context.getRealPath(""), oglasi);
+		poruke.savePoruka(context.getRealPath(""), poruke);
+		users.saveUser(context.getRealPath(""), users);
 				
 		return Response.ok().build();
 	}

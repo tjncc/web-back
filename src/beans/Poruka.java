@@ -15,7 +15,7 @@ public class Poruka {
 	private String posiljalac;
 	private String naslov;
 	private String sadrzaj;
-	private LocalDateTime dt;
+	//private LocalDateTime dt;
 	private String dateAndTime;
 	private String primalac;
 	
@@ -29,10 +29,10 @@ public class Poruka {
 		this.posiljalac = posiljalac;
 		this.naslov = naslov;
 		this.sadrzaj = sadrzaj;
-		this.dt = LocalDateTime.now();
+		//this.dt = LocalDateTime.now();
 		
 		DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-	    this.dateAndTime = dt.format(myFormatObj);
+	    this.dateAndTime = LocalDateTime.now().format(myFormatObj);
 		
 		this.primalac = primalac;
 		this.aktivna = true;
@@ -42,10 +42,10 @@ public class Poruka {
 	public Poruka() {
 		super();
 		this.idPoruka = UUID.randomUUID().toString();
-		this.dt = LocalDateTime.now();
+		//this.dt = LocalDateTime.now();
 		
 		DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-		 this.dateAndTime = dt.format(myFormatObj);
+		 this.dateAndTime = LocalDateTime.now().format(myFormatObj);
 		 
 		 this.aktivna = true;
 		 this.procitana = false;
@@ -85,7 +85,7 @@ public class Poruka {
 
 
 	
-
+/*
 	public LocalDateTime getDt() {
 		return dt;
 	}
@@ -93,7 +93,7 @@ public class Poruka {
 	public void setDt(LocalDateTime dt) {
 		this.dt = dt;
 	}
-
+*/
 	public String getDateAndTime() {
 		return dateAndTime;
 	}

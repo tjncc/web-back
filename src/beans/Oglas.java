@@ -26,6 +26,7 @@ public class Oglas implements Comparable<Oglas> {
 	
 	private ArrayList<String> kategorije = new ArrayList<String>();
 	private ArrayList<String> prijavili = new ArrayList<String>();
+	private ArrayList<String> lajkovali = new ArrayList<String>();
 	
 	public static enum Aktivan{
 	    AKTUELAN,
@@ -55,6 +56,7 @@ public class Oglas implements Comparable<Oglas> {
 		this.kupac = "";
 		this.prijave = 0;
 		this.prijavili = new ArrayList<String>();
+		this.lajkovali = new ArrayList<String>();
 
 	}
 	
@@ -73,6 +75,7 @@ public class Oglas implements Comparable<Oglas> {
 		this.kupac = "";
 		this.prijave = 0;
 		this.prijavili = new ArrayList<String>();
+		this.lajkovali = new ArrayList<String>();
 	}
 	
 	public Oglas(String naziv, double cena, int omiljen, String slika) {
@@ -87,6 +90,7 @@ public class Oglas implements Comparable<Oglas> {
 		this.kupac = "";
 		this.prijave = 0;
 		this.prijavili = new ArrayList<String>();
+		this.lajkovali = new ArrayList<String>();
 	}
 
 	public String getNaziv() {
@@ -232,6 +236,14 @@ public class Oglas implements Comparable<Oglas> {
 
 	public void setPrijavili(ArrayList<String> prijavili) {
 		this.prijavili = prijavili;
+	}
+
+	public ArrayList<String> getLajkovali() {
+		return lajkovali;
+	}
+
+	public void setLajkovali(ArrayList<String> lajkovali) {
+		this.lajkovali = lajkovali;
 	}
 	
 	

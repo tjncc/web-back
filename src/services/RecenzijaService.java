@@ -39,7 +39,8 @@ public class RecenzijaService {
 	public void init() {
 		
 		if(context.getAttribute("RecenzijaDAO") == null) {
-			context.setAttribute("RecenzijaDAO", new RecenzijaDAO());
+			String contextPath = context.getRealPath("");
+			context.setAttribute("RecenzijaDAO", new RecenzijaDAO(contextPath));
 		}
 		
 	}
@@ -114,9 +115,13 @@ public class RecenzijaService {
 		poruke.getPoruke().put(p.getIdPoruka(), p);	
 		recenzije.getRecenzije().put(recenzija.getIdRec(), recenzija);
 		
-		context.setAttribute(p.getIdPoruka(), p);
+		context.setAttribute("PorukaDAO", poruke);
 		context.setAttribute("OglasDAO", oglasi);
 		context.setAttribute("RecenzijaDAO", recenzije);
+		
+		poruke.savePoruka(context.getRealPath(""), poruke);
+		recenzije.saveRecenzija(context.getRealPath(""), recenzije);
+		oglasi.saveOglas(context.getRealPath(""), oglasi);
 		
 		return Response.ok().build();		
 	}
@@ -143,9 +148,9 @@ public class RecenzijaService {
 	
 		//OglasDAO oglasi = (OglasDAO) context.getAttribute("OglasDAO");
 		RecenzijaDAO recenzije = (RecenzijaDAO) context.getAttribute("RecenzijaDAO");
-		System.out.println(naziv);
+
 		Recenzija recenzija = recenzije.findID(naziv);
-		System.out.println("ovo je recenzija dobijena: " + recenzija);
+
 		//Oglas oglas = oglasi.getOglasi().get(recenzija.getOglas());		
 		
 		//oglas.getRecenzije().remove(recenzija.getIdOneRec());
@@ -153,6 +158,8 @@ public class RecenzijaService {
 		
 		//context.setAttribute("OglasDAO", oglasi);
 		context.setAttribute("RecenzijaDAO", recenzije);
+		
+		recenzije.saveRecenzija(context.getRealPath(""), recenzije);
 		
 		return Response.ok().build();	
 	}
@@ -185,9 +192,11 @@ public class RecenzijaService {
 		poruke.getPoruke().put(p.getIdPoruka(), p);	
 		recenzije.getRecenzije().put(recenzija.getIdRec(), recenzija);
 		
-		context.setAttribute(p.getIdPoruka(), p);
-		
+		context.setAttribute("PorukaDAO", poruke);		
 		context.setAttribute("RecenzijaDAO", recenzije);
+		
+		recenzije.saveRecenzija(context.getRealPath(""), recenzije);
+		poruke.savePoruka(context.getRealPath(""), poruke);
 		
 		return Response.ok().build();
 		

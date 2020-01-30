@@ -37,7 +37,8 @@ public class UserService {
 	public void init() {
 		
 		if(context.getAttribute("UserDAO") == null) {
-			context.setAttribute("UserDAO", new UserDAO());
+			String contextPath = context.getRealPath("");
+			context.setAttribute("UserDAO", new UserDAO(contextPath));
 		}
 	}
 	
@@ -55,6 +56,8 @@ public class UserService {
 		
 		users.getUsers().put(u.getKorisnickoIme(), u);
 		context.setAttribute("UserDAO", users);
+		
+		users.saveUser(context.getRealPath(""), users);
 		
 		return Response.ok().build();
 		
@@ -79,6 +82,8 @@ public class UserService {
 		
 		context.setAttribute("UserDAO", users);
 		
+		users.saveUser(context.getRealPath(""), users);
+		
 		return Response.ok(idOne).build();		
 		
 	}
@@ -96,7 +101,10 @@ public class UserService {
 		user.setIdOne("");
 		
 		context.setAttribute("UserDAO", users);
-		System.out.println(users.toString());
+		
+		users.saveUser(context.getRealPath(""), users);
+		
+		//System.out.println(users.toString());
 		
 	}
 	
@@ -156,6 +164,9 @@ public class UserService {
 		context.setAttribute("UserDAO", users);
 		context.setAttribute("OglasDAO", oglasi);
 		
+		users.saveUser(context.getRealPath(""), users);
+		oglasi.saveOglas(context.getRealPath(""), oglasi);
+		
 		return Response.ok().build();
 		
 	}
@@ -174,8 +185,12 @@ public class UserService {
 		
 		oglas.setOmiljen(oglas.getOmiljen()-1);
 		u.getOmiljeniOglasi().remove(oglas.getNaziv());
+		
 		context.setAttribute("UserDAO", users);
 		context.setAttribute("OglasDAO", oglasi);
+		
+		users.saveUser(context.getRealPath(""), users);
+		oglasi.saveOglas(context.getRealPath(""), oglasi);
 		
 		return Response.ok().build();
 		
@@ -225,6 +240,10 @@ public class UserService {
 		
 		u.getPoruceniProizvodi().add(oglas.getNaziv());
 		context.setAttribute("UserDAO", users);
+		context.setAttribute("OglasDAO", oglasi);
+		
+		users.saveUser(context.getRealPath(""), users);
+		oglasi.saveOglas(context.getRealPath(""), oglasi);
 		
 		return Response.ok().build();
 
@@ -269,6 +288,10 @@ public class UserService {
 		context.setAttribute("OglasDAO", oglasi);
 		context.setAttribute("UserDAO", users);
 		
+		users.saveUser(context.getRealPath(""), users);
+		oglasi.saveOglas(context.getRealPath(""), oglasi);
+		poruke.savePoruka(context.getRealPath(""), poruke);
+		
 		return Response.ok().build();
 
 	
@@ -309,6 +332,8 @@ public class UserService {
 		}
 		context.setAttribute("UserDAO", users);
 		
+		users.saveUser(context.getRealPath(""), users);
+		
 		return Response.ok().build();
 	}
 	
@@ -346,10 +371,11 @@ public class UserService {
 		
 		poruke.getPoruke().put(p.getIdPoruka(), p);
 
-		context.setAttribute("PorukaDAO", poruke);		
-
-		
+		context.setAttribute("PorukaDAO", poruke);			
 		context.setAttribute("UserDAO", users);
+		
+		users.saveUser(context.getRealPath(""), users);
+		poruke.savePoruka(context.getRealPath(""), poruke);
 				
 		return Response.ok().build();
 	}
@@ -358,21 +384,24 @@ public class UserService {
 	@Path("/user/like/{korisnickoIme}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response likeUser(@PathParam("korisnickoIme") String korisnickoIme,  @Context HttpServletRequest request) {
+	public Response likeUser(@PathParam("korisnickoIme") String korisnickoIme, String idOne,  @Context HttpServletRequest request) {
 		
 		UserDAO users = (UserDAO) context.getAttribute("UserDAO");
 		
 		User user = users.getUsers().get(korisnickoIme);
-			
+		User ulogovan = users.findID(idOne);
+		
 		if(user == null)
 		{
 			return Response.status(400).build();
 		}
 		
 		user.setBrLajkova(user.getBrLajkova() + 1);
-		user.getLajkovali().add(korisnickoIme);
+		user.getLajkovali().add(ulogovan.getKorisnickoIme());
 		
 		context.setAttribute("UserDAO", users);
+		
+		users.saveUser(context.getRealPath(""), users);
 				
 		return Response.ok().build();
 	}
@@ -381,45 +410,29 @@ public class UserService {
 	@Path("/user/dislike/{korisnickoIme}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response dislikeUser(@PathParam("korisnickoIme") String korisnickoIme,  @Context HttpServletRequest request) {
+	public Response dislikeUser(@PathParam("korisnickoIme") String korisnickoIme, String idOne,  @Context HttpServletRequest request) {
 		
 		UserDAO users = (UserDAO) context.getAttribute("UserDAO");
 		
 		User user = users.getUsers().get(korisnickoIme);
-			
+		User ulogovan = users.findID(idOne);
+		
 		if(user == null)
 		{
 			return Response.status(400).build();
 		}
 		
 		user.setBrDislajkova(user.getBrDislajkova() + 1);
-		user.getLajkovali().add(korisnickoIme);
+		user.getLajkovali().add(ulogovan.getKorisnickoIme());
 		
 		context.setAttribute("UserDAO", users);
-				
+		
+		users.saveUser(context.getRealPath(""), users);
+
 		return Response.ok().build();
 	}
 	
 	
-	@GET
-	@Path("/user/list/{naziv}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public ArrayList<User> userList(@PathParam("naziv") String naziv,  @Context HttpServletRequest request) {
-		
-		UserDAO users = (UserDAO) context.getAttribute("UserDAO");
-		
-		if(naziv == "KUPAC") {
-			return users.getAllUsers();
-		} else if (naziv == "PRODAVAC") {
-			return users.getAllSellers();
-		} else if (naziv == "ADMIN"){
-			return users.getAllAdmins();
-		} else {
-			return null;
-		}
-		
-	}
 	
 	@GET
 	@Path("/allusers")
@@ -429,7 +442,7 @@ public class UserService {
 		
 		UserDAO users = (UserDAO) context.getAttribute("UserDAO");
 		
-		return users.getUsersList();
+		return users.allUsersList();
 		
 	}
 	

@@ -32,7 +32,8 @@ public class PorukaService {
 	public void init() {
 		
 		if(context.getAttribute("PorukaDAO") == null) {
-			context.setAttribute("PorukaDAO", new PorukaDAO());
+			String contextPath = context.getRealPath("");
+			context.setAttribute("PorukaDAO", new PorukaDAO(contextPath));
 		}		
 	}
 	
@@ -61,6 +62,8 @@ public class PorukaService {
 		
 		context.setAttribute("PorukaDAO", poruke);
 		
+		poruke.savePoruka(context.getRealPath(""), poruke);
+		
 		return Response.ok().build();
 	}
 	
@@ -75,6 +78,9 @@ public class PorukaService {
 		
 		Poruka p = poruke.findID(naziv);
 		p.setProcitana(true);
+		
+		context.setAttribute("PorukaDAO", poruke);
+		poruke.savePoruka(context.getRealPath(""), poruke);
 
 		return p;
 		
@@ -94,6 +100,9 @@ public class PorukaService {
 		Poruka p = poruke.findID(naziv);
 		
 		p.setAktivna(false);
+		
+		context.setAttribute("PorukaDAO", poruke);
+		poruke.savePoruka(context.getRealPath(""), poruke);
 		
 		return Response.ok().build();
 	}

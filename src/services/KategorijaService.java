@@ -32,7 +32,8 @@ public class KategorijaService {
 		public void init() {
 			
 			if(context.getAttribute("KategorijaDAO") == null) {
-				context.setAttribute("KategorijaDAO", new KategorijaDAO());
+				String contextPath = context.getRealPath("");
+				context.setAttribute("KategorijaDAO", new KategorijaDAO(contextPath));
 			}
 		}
 		
@@ -43,6 +44,8 @@ public class KategorijaService {
 		public Collection<Kategorija> getKategorije(@Context HttpServletRequest request)
 		{
 			KategorijaDAO kategorije = (KategorijaDAO) context.getAttribute("KategorijaDAO");
+			System.out.println(context.getRealPath(""));
+			
 			return kategorije.kategorijePrikaz();
 		}
 		
@@ -60,7 +63,10 @@ public class KategorijaService {
 			}
 			
 			kategorije.getKategorije().put(k.getNaziv(), k);
+			
 			context.setAttribute("KategorijaDAO", kategorije);
+			
+			kategorije.saveKategorija(context.getRealPath(""), kategorije);
 			
 			return Response.ok().build();
 			
@@ -93,7 +99,8 @@ public class KategorijaService {
 			kat.setAktivna(false);
 			
 			context.setAttribute("KategorijaDAO", kategorije);
-			
+			kategorije.saveKategorija(context.getRealPath(""), kategorije);
+
 			return Response.ok().build();
 		}
 		
@@ -108,6 +115,7 @@ public class KategorijaService {
 			kategorije.getKategorije().put(k.getNaziv(), k);
 			
 			context.setAttribute("KategorijaDAO", kategorije);
+			kategorije.saveKategorija(context.getRealPath(""), kategorije);
 			
 			return Response.ok().build();
 			
@@ -131,6 +139,9 @@ public class KategorijaService {
 			
 			context.setAttribute("KategorijaDAO", kategorije);
 			context.setAttribute("OglasDAO", oglasi);
+			
+			kategorije.saveKategorija(context.getRealPath(""), kategorije);
+			oglasi.saveOglas(context.getRealPath(""), oglasi);
 			
 			return oglasi.oglasiPrikazKateg(kat);
 			
