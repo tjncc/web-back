@@ -44,7 +44,7 @@ public class KategorijaService {
 		public Collection<Kategorija> getKategorije(@Context HttpServletRequest request)
 		{
 			KategorijaDAO kategorije = (KategorijaDAO) context.getAttribute("KategorijaDAO");
-			System.out.println(context.getRealPath(""));
+			//System.out.println(context.getRealPath(""));
 			
 			return kategorije.kategorijePrikaz();
 		}

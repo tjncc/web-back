@@ -2,6 +2,7 @@ package services;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
@@ -50,7 +51,7 @@ public class OglasService {
 	public Collection<Oglas> getOglasiPrikaz(@Context HttpServletRequest request)
 	{
 		OglasDAO oglasi = (OglasDAO) context.getAttribute("OglasDAO");
-		//System.out.println(oglasi.toString());
+
 		oglasi.oglasiPrikaz();
 		
 		return oglasi.oglasiPrikaz();
@@ -64,8 +65,7 @@ public class OglasService {
 	public Collection<Oglas> getOglasiTopPrikaz(@Context HttpServletRequest request)
 	{
 		OglasDAO oglasi = (OglasDAO) context.getAttribute("OglasDAO");
-
-		
+	
 		return oglasi.oglasiPrikazTop();
 		
 	}
@@ -107,7 +107,6 @@ public class OglasService {
 	public Oglas getJedanOglas(@PathParam("naziv") String naziv,@Context HttpServletRequest request)
 	{
 		OglasDAO oglasi = (OglasDAO) context.getAttribute("OglasDAO");
-		//System.out.println(oglasi.toString());
 		
 		Oglas o = oglasi.getOglasi().get(naziv);
 
@@ -115,8 +114,8 @@ public class OglasService {
 		return o;	
 		
 	}
-	
-	@GET
+	/*
+	@POST
 	@Path("/favarticles")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -132,7 +131,7 @@ public class OglasService {
 		return omiljeni;
 		
 	}
-	
+	*/
 	@POST
 	@Path("/article/like/{naziv}")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -320,7 +319,8 @@ public class OglasService {
 		p1.setNaslov("Izmenjen oglas");
 		p1.setPosiljalac("Automatska poruka");
 		p1.setPrimalac(o.getProdavac());
-		p1.setSadrzaj("Admin je izmenio vaš gore naveden oglas.");
+		p1.setNaziv(o.getNaziv());
+		p1.setSadrzaj("Izmenjen je vaš gore naveden oglas.");
 		
 		poruke.getPoruke().put(p1.getIdPoruka(), p1);
 
@@ -428,5 +428,17 @@ public class OglasService {
 				
 		return Response.ok().build();
 	}
+	
+	
+	@GET
+	@Path("/articles/cities")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public HashSet<String> sviGradovi(@Context HttpServletRequest request){
+		OglasDAO oglasi = (OglasDAO) context.getAttribute("OglasDAO");
+		
+		return oglasi.gradovi();		
+	}
+	
 
 }

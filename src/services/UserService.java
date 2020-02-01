@@ -97,14 +97,11 @@ public class UserService {
 		UserDAO users = (UserDAO) context.getAttribute("UserDAO"); 		
 		
 		User user = users.findID(idOne);
-		//System.out.println(user.toString());
 		user.setIdOne("");
 		
 		context.setAttribute("UserDAO", users);
 		
 		users.saveUser(context.getRealPath(""), users);
-		
-		//System.out.println(users.toString());
 		
 	}
 	
@@ -117,9 +114,7 @@ public class UserService {
 		UserDAO users = (UserDAO) context.getAttribute("UserDAO");
 		
 		User user = users.findID(idOne);
-		
-
-		
+			
 		if(user == null)
 		{
 			return Response.status(400).build();
@@ -307,8 +302,7 @@ public class UserService {
 	public Collection<User> getUsersData(String idOne,  @Context HttpServletRequest request) {
 		
 		UserDAO users = (UserDAO) context.getAttribute("UserDAO");
-
-		
+	
 		return users.getUsers().values();
 	}
 	
@@ -363,6 +357,20 @@ public class UserService {
 		user.setPrijave(user.getPrijave() + 1);
 		
 		user.getPrijavili().add(ulogovan.getKorisnickoIme());
+		
+		if(user.getPrijave() >= 3) {
+			user.setSumnjivProdavac(true);
+			
+			Poruka p1 = new Poruka();
+			
+			p1.setNaslov("Obaveštenje - sumnjiv nalog");
+			p1.setPosiljalac("Automatska poruka");
+			p1.setPrimalac(user.getKorisnickoIme());
+			p1.setSadrzaj("Vas nalog je oznacen kao sumnjiv, zbog velikog broja prijava. Admin ce odluciti"
+					+ "da li ce i kada vam vratiti sve mogucnosti koje ste imali na nalogu do sada.");
+			
+			poruke.getPoruke().put(p1.getIdPoruka(), p1);
+		}
 		
 		p.setNaslov("Upozorenje");
 		p.setPosiljalac("Automatska poruka");
@@ -444,6 +452,38 @@ public class UserService {
 		
 		return users.allUsersList();
 		
+	}
+	
+	@POST
+	@Path("/admin/freeuser/{korisnickoIme}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response freeUser(@PathParam("korisnickoIme") String korisnickoIme, @Context HttpServletRequest request) {
+		UserDAO users = (UserDAO) context.getAttribute("UserDAO");
+		PorukaDAO poruke = (PorukaDAO) context.getAttribute("PorukaDAO");
+		
+		User user = users.getUsers().get(korisnickoIme);
+		
+		user.setPrijave(0);
+		user.setSumnjivProdavac(false);
+		user.setPrijavili(new ArrayList<String>());
+		
+		Poruka p = new Poruka();
+		p.setNaslov("Obaveštenje");
+		p.setPosiljalac("Automatska poruka");
+		p.setPrimalac(user.getKorisnickoIme());
+		p.setSadrzaj("Skinuta je zabrana sa profila. Aktivnosti na vašem profilu su ponovo omogucene.");
+		
+		poruke.getPoruke().put(p.getIdPoruka(), p);
+
+		context.setAttribute("PorukaDAO", poruke);			
+		context.setAttribute("UserDAO", users);
+		
+		users.saveUser(context.getRealPath(""), users);
+		poruke.savePoruka(context.getRealPath(""), poruke);
+				
+		return Response.ok().build();
+
 	}
 	
 	

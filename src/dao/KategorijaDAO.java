@@ -105,15 +105,6 @@ public class KategorijaDAO {
 		return null;
 	}
 
-	@Override
-	public String toString() {
-		String retVal = "";
-		for(Kategorija kat: kategorije.values()) {
-			retVal = kat.getNaziv() + "\n";
-		}
-		
-		return retVal;
-	}
 	
 	
 	@SuppressWarnings("unchecked")

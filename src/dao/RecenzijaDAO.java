@@ -39,9 +39,9 @@ public class RecenzijaDAO {
 	}
 	
 	public Recenzija findID(String idOneRec) {
-		System.out.println("Prosledjen idOne: " + idOneRec);
+		//System.out.println("Prosledjen idOne: " + idOneRec);
 		for(Recenzija rec: recenzije.values()) {
-			System.out.println("ovaj iz recenzije id: " + rec.getIdRec());
+			//System.out.println("ovaj iz recenzije id: " + rec.getIdRec());
 			if(idOneRec.equals(rec.getIdRec())) {
 				
 				return rec;
