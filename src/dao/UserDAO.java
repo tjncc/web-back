@@ -37,14 +37,16 @@ public class UserDAO {
 		users = new HashMap<String, User>();
 		loadUser(contextPath);
 		
-		User u1 = new User("user","user","Tamara","Jancic",Uloga.KUPAC,"063377237","Novi Sad","tamaraa.jancic@gmail.com");
-		users.put("user", u1);
-		
 		User admin = new User("admin","admin","Admin","Admin",Uloga.ADMINISTRATOR,"","","");
 		users.put("admin", admin);
 		
+		/*
+		User u1 = new User("user","user","Tamara","Jancic",Uloga.KUPAC,"063377237","Novi Sad","tamaraa.jancic@gmail.com");
+		users.put("user", u1);
+			
 		User seller = new User("seller","seller","Seller","Seller",Uloga.PRODAVAC,"","","");
 		users.put("seller", seller);
+		*/
 	}
 	
 	public User find(User u) {
@@ -141,9 +143,9 @@ public class UserDAO {
 			MapType type = factory.constructMapType(HashMap.class, String.class, User.class);
 			mapper.getFactory().configure(JsonGenerator.Feature.ESCAPE_NON_ASCII, true);
 			users = ((HashMap<String, User>) mapper.readValue(file, type));
-			for(User u : users.values()) {
-				System.out.println(u.toString());
-			}
+		//	for(User u : users.values()) {
+		//		System.out.println(u.toString());
+		//	}
 		} catch (FileNotFoundException fnfe) {
 			try {
 				file.createNewFile();

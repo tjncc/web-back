@@ -30,6 +30,8 @@ public class User{
 	private ArrayList<String> lajkovali = new ArrayList<String>();
 	private ArrayList<String> prijavili = new ArrayList<String>();
 	
+	private boolean sumnjivProdavac = false;
+	
 	
 	public static enum Uloga{
 		KUPAC,
@@ -46,6 +48,7 @@ public class User{
 		this.brDislajkova = 0;
 		this.lajkovali = new ArrayList<String>();
 		this.prijavili = new ArrayList<String>();
+		this.sumnjivProdavac = false;
 	}
 	
 
@@ -67,6 +70,7 @@ public class User{
 		this.prijave = 0;
 		this.lajkovali = new ArrayList<String>();
 		this.prijavili = new ArrayList<String>();
+		this.sumnjivProdavac = false;
 
 	}
 	
@@ -279,6 +283,15 @@ public class User{
 		this.prijavili = prijavili;
 	}
 
+
+	public boolean isSumnjivProdavac() {
+		return sumnjivProdavac;
+	}
+
+
+	public void setSumnjivProdavac(boolean sumnjivProdavac) {
+		this.sumnjivProdavac = sumnjivProdavac;
+	}
 
 
 	@Override

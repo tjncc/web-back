@@ -133,9 +133,9 @@ public class RecenzijaService {
 	public Recenzija getJednuRecenziju(@PathParam("naziv") String naziv,@Context HttpServletRequest request)
 	{
 		RecenzijaDAO recenzije = (RecenzijaDAO) context.getAttribute("RecenzijaDAO");
-		System.out.println(naziv);
+		//System.out.println(naziv);
 		Recenzija rec = recenzije.findID(naziv);
-		System.out.println(rec.getNaziv());
+		//System.out.println(rec.getNaziv());
 		return rec;			
 	}
 	
@@ -146,17 +146,13 @@ public class RecenzijaService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteArticle(@PathParam("naziv") String naziv, @Context HttpServletRequest request) {
 	
-		//OglasDAO oglasi = (OglasDAO) context.getAttribute("OglasDAO");
+
 		RecenzijaDAO recenzije = (RecenzijaDAO) context.getAttribute("RecenzijaDAO");
 
 		Recenzija recenzija = recenzije.findID(naziv);
 
-		//Oglas oglas = oglasi.getOglasi().get(recenzija.getOglas());		
-		
-		//oglas.getRecenzije().remove(recenzija.getIdOneRec());
 		recenzija.setAktivna(false);
-		
-		//context.setAttribute("OglasDAO", oglasi);
+
 		context.setAttribute("RecenzijaDAO", recenzije);
 		
 		recenzije.saveRecenzija(context.getRealPath(""), recenzije);

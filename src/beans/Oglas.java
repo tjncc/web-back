@@ -36,7 +36,7 @@ public class Oglas implements Comparable<Oglas> {
 	}
 	
 	public Oglas(String naziv, double cena, String opis, int brLajkova, int brDislajkova, String slika,
-			String datumPostavljanja, String datumIsticanja,
+			String datumPostavljanja, String datumIsticanja, Aktivan aktivnost,
 			String grad) {
 		super();
 		this.naziv = naziv;
@@ -47,7 +47,7 @@ public class Oglas implements Comparable<Oglas> {
 		this.slika = slika;
 		this.datumPostavljanja = datumPostavljanja;
 		this.datumIsticanja = datumIsticanja;
-		this.stanje = Aktivan.AKTUELAN;
+		this.stanje = aktivnost;
 		this.recenzije = new ArrayList<String>();
 		this.grad = grad;
 		this.omiljen = 0;
@@ -68,7 +68,7 @@ public class Oglas implements Comparable<Oglas> {
 		this.opis = "";
 		this.datumIsticanja = null;
 		this.grad = "";	
-		this.prodavac = "zzzzzzzoga";
+		this.prodavac = "";
 		this.recenzije = new ArrayList<String>();
 		this.stanje = Aktivan.AKTUELAN;
 		this.kategorije = new ArrayList<String>();
@@ -78,17 +78,17 @@ public class Oglas implements Comparable<Oglas> {
 		this.lajkovali = new ArrayList<String>();
 	}
 	
-	public Oglas(String naziv, double cena, int omiljen, String slika) {
+	public Oglas(String naziv, double cena,String slika,String prodavac,Aktivan aktivnost, int omiljen, String kupac, int prijave) {
 		this.naziv = naziv;
 		this.cena = cena;
 		this.slika = slika;
-		this.prodavac = "zzzzzzzoga";
-		this.stanje = Aktivan.AKTUELAN;
+		this.prodavac = prodavac;
+		this.stanje = aktivnost;
 		this.omiljen = omiljen;
 		this.recenzije = new ArrayList<String>();
 		this.kategorije = new ArrayList<String>();
-		this.kupac = "";
-		this.prijave = 0;
+		this.kupac = kupac;
+		this.prijave = prijave;
 		this.prijavili = new ArrayList<String>();
 		this.lajkovali = new ArrayList<String>();
 	}
